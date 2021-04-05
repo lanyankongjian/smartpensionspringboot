@@ -1,0 +1,110 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该xml文件所对应的JAVA接口类-->
+<mapper namespace="com.example.smartpensionspringboot.cj.mapper.ExpectedRegistrationMapper">
+    <resultMap id="er" type="com.example.smartpensionspringboot.cj.pojos.ExpectedRegistration">
+        <id  column="reg_id" property="regId"/>
+        <result column="old_name" property="erOldName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="phy_time" property="phyTime"/>
+        <result column="reg_time" property="regTime"/>
+        <result column="registrant" property="registrant"/>
+        <result column="registrant_id" property="registrantId"/>
+        <result column="phy_hospital" property="phyHospital"/>
+        <result column="phy_examination" property="phyExamination"/>
+        <result column="phy_picture" property="phyPicture"/>
+        <result column="height" property="height"/>
+        <result column="weight" property="weight"/>
+        <result column="temperature" property="temperature"/>
+        <result column="high_pressure" property="highPressure"/>
+        <result column="low_pressure" property="lowPressure"/>
+        <result column="pulse" property="pulse"/>
+        <result column="blood_oxygen" property="bloodOxygen"/>
+        <result column="fasting_blood" property="fastingBlood"/>
+        <result column="postprandial_blood" property="postprandialBlood"/>
+        <result column="total_cholesterol" property="totalCholesterol"/>
+        <result column="hdl" property="hdl"/>
+        <result column="triglyceride" property="triglyceride"/>
+        <result column="ldl" property="ldl"/>
+        <result column="uric_acid" property="uricAcid"/>
+        <result column="qrs_interval" property="qrsInterval"/>
+        <result column="rr_interval" property="rrInterval"/>
+        <result column="gp_comments" property="gpComments"/>
+        <result column="tda_results" property="tdaResults"/>
+        <result column="heart_rate" property="heartRate"/>
+        <association property="recOld" resultMap="ro"></association>
+    </resultMap>
+    <resultMap id="ro" type="com.example.smartpensionspringboot.cj.pojos.RecOld">
+         <id column="old_id" property="oldId"/>
+         <result column="rooldname" property="oldName"/>
+    </resultMap>
+    <select id="selectAll" resultMap="er">
+        select er.*,ro.* ,ro.old_name rooldname from Expected_registration er inner join rec_old ro on er.old_name=ro.old_id
+        <where>
+            <if test="erOldName!=null" >
+                er.old_name=#{erOldName}
+            </if>
+            <if test="updateTime!=null" >
+               and er.update_time=#{updateTime}
+            </if>
+            <if test="phyTime!=null" >
+                and er.phy_time=#{phyTime}
+            </if>
+            <if test="phyExamination !=null and phyExamination !=''">
+                and er.phy_examination like '%${phyExamination}%'
+            </if>
+            <if test=" phyHospital !=null and  phyHospital !=''">
+                and er.phy_hospital like '%${phyHospital}%'
+            </if>
+            <if test="registrantId !=null ">
+                and er.registrantId =#{registrantId}
+            </if>
+            <if test="registrant !=null and registrant !='' ">
+                and er.registrant =#{registrant}
+            </if>
+        </where>
+        order by er.reg_id desc
+    </select>
+    <select id="selectName" resultMap="ro">
+        select *,old_name rooldname from rec_old
+    </select>
+    <insert id="insert" parameterType="com.example.smartpensionspringboot.cj.pojos.ExpectedRegistration">
+        insert into Expected_registration(old_name,update_time,phy_time,reg_time,registrant,registrant_id,phy_hospital,phy_examination,phy_picture,height,weight,
+        temperature,high_pressure,low_pressure,pulse,blood_oxygen,fasting_blood ,postprandial_blood,total_cholesterol,hdl,triglyceride,
+        ldl,uric_acid,qrs_interval,rr_interval,
+        gp_comments,tda_results,heart_rate) values(#{erOldName},#{updateTime},#{phyTime},
+        #{regTime},#{registrant},#{registrantId},#{phyHospital},#{phyExamination},#{phyPicture},#{height},
+        #{weight},#{temperature},#{highPressure},#{lowPressure},#{pulse},#{bloodOxygen},#{fastingBlood},
+        #{postprandialBlood},#{totalCholesterol},#{hdl},#{triglyceride},#{ldl},#{uricAcid},#{qrsInterval},
+        #{rrInterval},#{gpComments},#{tdaResults},#{heartRate})
+    </insert>
+    <delete id="delete">
+        delete from Expected_registration where reg_id=#{regId}
+    </delete>
+    <update id="update" parameterType="com.example.smartpensionspringboot.cj.pojos.ExpectedRegistration">
+        update Expected_registration set registrant_id=#{registrantId},phy_picture=#{phyPicture},
+        height=#{height},weight=#{weight},temperature=#{temperature},high_pressure=#{highPressure},low_pressure=#{lowPressure},
+        pulse=#{pulse},blood_oxygen=#{bloodOxygen},fasting_blood=#{fastingBlood},postprandial_blood=#{postprandialBlood},
+        total_cholesterol=#{totalCholesterol},hdl=#{hdl},triglyceride=#{triglyceride},ldl=#{ldl},uric_acid=#{uricAcid},
+        qrs_interval=#{qrsInterval},rr_interval=#{rrInterval},gp_comments=#{gpComments},tda_results=#{tdaResults},heart_rate=#{heartRate},
+        <if test="erOldName !=null">
+            old_name=#{erOldName},
+        </if>
+        <if test="phyTime !=null">
+            phy_time=#{phyTime},
+        </if>
+        <if test="regTime !=null">
+            reg_time=#{regTime},
+        </if>
+        <if test="registrant !=null and registrant !=''">
+            registrant=#{registrant},
+         </if>
+        <if test="phyHospital !=null and phyHospital !=''">
+            phy_hospital=#{phyHospital},
+        </if>
+        <if test="phyExamination !=null and phyExamination !=''">
+            phy_examination=#{phyExamination},
+        </if>
+        update_time=#{updateTime}
+        where reg_id=#{regId}
+    </update>
+</mapper>
