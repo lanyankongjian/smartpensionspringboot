@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.CategoryDao">
+    <resultMap id="CategoryMap" type="com.example.smartpensionspringboot.lbb.pojos.Category">
+        <id column="id" property="id"/>
+        <result property="category_name" column="category_name"/>
+        <result property="cost_text" column="cost_text"/>
+        <result property="fees" column="fees"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+    </resultMap>
+    <select id="getCategory" resultMap="CategoryMap">
+        SELECT category_name,cost_text,fees,remark
+        FROM cost_category order by insert_time desc
+    </select>
+    <select id="getCategoryById" resultMap="CategoryMap" parameterType="int">
+        SELECT category_name,cost_text,fees,remark
+        FROM cost_category where id = #{id} order by insert_time desc
+    </select>
+    <insert id="addCategory" parameterType="com.example.smartpensionspringboot.lbb.vo.CategoryVo">
+        INSERT INTO cost_category(category_name,cost_text,fees,remark,insert_time,update_time,delete_time)
+        VALUES(#{category_name},#{cost_text},#{fees},#{remark},#{insert_time},#{update_time},#{delete_time})
+    </insert>
+    <update id="updateCategory" parameterType="com.example.smartpensionspringboot.lbb.vo.CategoryVo">
+        update cost_category
+        <trim prefix="set" suffixOverrides=",">
+            <if test="category_name != null and category_name != ''">
+                category_name = #{category_name}
+            </if>
+            <if test="cost_text != null and cost_text != ''">
+                cost_text = #{cost_text}
+            </if>
+            <if test="fees != null and fees != ''">
+                fees = #{fees}
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark}
+            </if>
+            <if test="insert_time != null">
+                insert_time = #{insert_name}
+            </if>
+            <if test="update_time != null">
+                update_time = #{update_name}
+            </if>
+            <if test="delete_time != null">
+                delete_time = #{delete_name}
+            </if>
+        </trim>
+    </update>
+    <select id="getCategoryBySearch" resultMap="CategoryMap" parameterType="com.example.smartpensionspringboot.lbb.vo.CategoryVo">
+        select * from cost_category
+        <where>
+            <if test="category_name != null and category_name != ''">
+                and  category_name like "%" #{category_name} "%"
+            </if>
+            <if test="fees != null and fees != ''">
+                and  fees like "%" #{fees} "%"
+            </if>
+            <if test="cost_text != null and cost_text != ''">
+                and  cost_text like "%" #{cost_text} "%"
+            </if>
+        </where>
+    </select>
+    <select id="getCategoryByName" parameterType="String" resultMap="CategoryMap">
+        select * from cost_category where category_name = #{name}
+    </select>
+</mapper>

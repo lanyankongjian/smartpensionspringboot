@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.StreamDao">
+    <resultMap id="StreamMap" type="com.example.smartpensionspringboot.lbb.pojos.Stream">
+        <id column="id" property="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="category_id" column="category_id"/>
+        <result property="tollman" column="tollman"/>
+        <result property="money" column="money"/>
+        <result property="maney_time" column="maney_time"/>
+        <result property="maney_text" column="maney_text"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+        </association>
+        <association property="category" javaType="com.example.smartpensionspringboot.lbb.pojos.Category">
+            <id column="id" property="id"/>
+            <result property="category_name" column="category_name"/>
+        </association>
+    </resultMap>
+    <select id="getStream" resultMap="StreamMap">
+        SELECT ro.old_name,cc.category_name,cs.money,cs.tollman,cs.maney_time,cs.maney_text,cs.remark
+        FROM cost_stream cs
+        LEFT JOIN rec_old ro ON cs.old_id = ro.old_id
+        LEFT JOIN cost_category cc ON cs.category_id = cc.id order by cs.id desc
+    </select>
+    <insert id="addStream" parameterType="com.example.smartpensionspringboot.lbb.pojos.Stream">
+        insert into cost_stream(old_id,category_id,tollman,money,maney_time,maney_text,remark)
+        values (#{old_id},#{category_id},#{tollman},#{money},#{maney_time},#{maney_text},#{remark})
+    </insert>
+</mapper>

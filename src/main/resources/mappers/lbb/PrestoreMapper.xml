@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.PrestoreDao">
+    <resultMap id="PrestoreMap" type="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+        <id column="id" property="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="detail_id" column="detail_id"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="phone" column="phone"/>
+        </association>
+        <association property="detailStorage" javaType="com.example.smartpensionspringboot.lbb.pojos.DetailStorage">
+            <id column="id" property="id"/>
+            <result property="amount" column="amount"/>
+            <result property="charging_time" column="charging_time"/>
+            <result property="dexplain" column="dexplain"/>
+            <result property="amount" column="amount"/>
+            <result property="payment" column="payment"/>
+            <result property="remark" column="remark"/>
+        </association>
+    </resultMap>
+    <select id="getAllPrestore" resultMap="PrestoreMap">
+        SELECT cp.id,ro.old_name,ro.phone,ro.identitycard,cds.amount,ro.old_id
+        FROM cost_prestore cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        LEFT JOIN cost_detail_storage cds ON cp.detail_id = cds.id order by cp.id desc
+    </select>
+    <select id="getPrestoreByOldId" resultMap="PrestoreMap" parameterType="int">
+        SELECT cds.tollman,cds.charging_time,cds.dexplain,cds.payment,cds.amount,cds.remark
+        FROM cost_prestore cp
+        LEFT JOIN cost_detail_storage cds ON cds.id = cp.detail_id
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        where ro.old_id = #{id}
+    </select>
+    <insert id="addPrestore" parameterType="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+        insert into cost_prestore(old_id,detail_id,remark)
+        values(#{old_id},#{detail_id},#{remark})
+    </insert>
+</mapper>

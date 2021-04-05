@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.OldDao">
+    <resultMap id="oldMapper" type="com.example.smartpensionspringboot.lbb.pojos.Old">
+        <id column="old_id" property="oldId"/>
+        <result column="old_name" property="oldName"/>
+        <result column="identitycard" property="identitycard"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="contract_time" property="contractTime"/>
+        <result column="join_time" property="joinTime"/>
+        <result column="handle" property="handle"/>
+        <result column="archives" property="archives"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="getAllOld" resultMap="oldMapper">
+        select * from rec_old order by old_id desc
+    </select>
+    <select id="getOldByName" parameterType="String" resultMap="oldMapper">
+        select * from rec_old where old_name = #{name}
+    </select>
+</mapper>
