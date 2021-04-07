@@ -7,7 +7,7 @@ import java.util.Date;
 //评估管理--评估登记
 public class AssessmentRegistration {
     private Integer arId;
-    private Integer oldName;
+    private Integer arOldName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
@@ -15,9 +15,19 @@ public class AssessmentRegistration {
     private String assessmentType;
     private String assessor;
     private String assessmentLocation;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date registrationTime;
     private String registrant;
     private String assessmentResults;
+    private RecOld recOld;
+
+    public RecOld getRecOld() {
+        return recOld;
+    }
+
+    public void setRecOld(RecOld recOld) {
+        this.recOld = recOld;
+    }
 
     public Integer getArId() {
         return arId;
@@ -27,12 +37,12 @@ public class AssessmentRegistration {
         this.arId = arId;
     }
 
-    public Integer getOldName() {
-        return oldName;
+    public Integer getArOldName() {
+        return arOldName;
     }
 
-    public void setOldName(Integer oldName) {
-        this.oldName = oldName;
+    public void setArOldName(Integer arOldName) {
+        this.arOldName = arOldName;
     }
 
     public Date getUpdateTime() {

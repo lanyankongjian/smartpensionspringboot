@@ -1,0 +1,92 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该xml文件所对应的JAVA接口类-->
+<mapper namespace="com.example.smartpensionspringboot.cj.mapper.AssessmentRegistrationMapper">
+    <resultMap id="ar" type="com.example.smartpensionspringboot.cj.pojos.AssessmentRegistration">
+        <id  column="ar_id" property="arId"/>
+        <result column="old_name" property="arOldName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="evaluation_date" property="evaluationDate"/>
+        <result column="assessment_type" property="assessmentType"/>
+        <result column="assessor" property="assessor"/>
+        <result column="assessment_location" property="assessmentLocation"/>
+        <result column="registration_time" property="registrationTime"/>
+        <result column="registrant" property="registrant"/>
+        <result column="assessment_results" property="assessmentResults"/>
+        <association property="recOld" resultMap="ro"></association>
+    </resultMap>
+    <resultMap id="ro" type="com.example.smartpensionspringboot.cj.pojos.RecOld">
+        <id column="old_id" property="oldId"/>
+        <result column="rooldname" property="oldName"/>
+    </resultMap>
+    <select id="selectAll" resultMap="ar">
+        select ar.*,ro.* ,ro.old_name rooldname from Assessment_registration ar inner join rec_old ro on ar.old_name=ro.old_id
+        <where>
+            <if test="arOldName!=null" >
+                ar.old_name=#{arOldName}
+            </if>
+            <if test="updateTime!=null" >
+                and ar.update_time=#{updateTime}
+            </if>
+            <if test="registrationTime!=null" >
+                and ar.registration_time=#{registrationTime}
+            </if>
+            <if test="evaluationDate!=null" >
+                and ar.evaluation_date=#{evaluationDate}
+            </if>
+            <if test="assessmentType !=null and assessmentType !=''">
+                and ar.assessment_type=#{assessmentType}
+            </if>
+            <if test=" assessor !=null and  assessor !=''">
+                and ar.assessor like '%${assessor}%'
+            </if>
+            <if test="assessmentLocation !=null and assessmentLocation !=''">
+                and ar.diagnosis_results like '%${assessmentLocation}%'
+            </if>
+            <if test="registrant !=null and registrant !='' ">
+                and ar.registrant like '%${registrant}%'
+            </if>
+            <if test="assessmentResults !=null and assessmentResults !='' ">
+                and ar.assessment_results like '%${assessmentResults}%'
+            </if>
+        </where>
+        order by ar.ar_id desc
+    </select>
+    <select id="selectName" resultMap="ro">
+        select *,old_name rooldname from rec_old
+    </select>
+    <insert id="insert" parameterType="com.example.smartpensionspringboot.cj.pojos.AssessmentRegistration">
+        insert into Assessment_registration(old_name,update_time,evaluation_date,assessment_type,assessor,
+        assessment_location,registration_time,registrant,assessment_results)
+        values(#{arOldName},#{updateTime},#{evaluationDate},
+        #{assessmentType},#{assessor},#{assessmentLocation},#{registrationTime},#{registrant},#{assessmentResults})
+    </insert>
+    <delete id="delete">
+        delete from Assessment_registration where ar_id=#{arId}
+    </delete>
+    <update id="update" parameterType="com.example.smartpensionspringboot.cj.pojos.AssessmentRegistration">
+        update Assessment_registration set assessment_location=#{assessmentLocation},
+        <if test="arOldName!=null" >
+            old_name=#{arOldName},
+        </if>
+        <if test="evaluationDate !=null" >
+            evaluation_date=#{evaluationDate},
+        </if>
+        <if test="assessmentType !=null and assessmentType !=''">
+            assessment_type=#{assessmentType},
+        </if>
+        <if test=" assessor !=null and  assessor !=''">
+            assessor =#{assessor},
+        </if>
+        <if test="registrationTime !=null ">
+            registration_time =#{registrationTime},
+        </if>
+        <if test=" registrant !=null and  registrant !=''">
+            registrant =#{registrant},
+        </if>
+        <if test=" assessmentResults !=null and  assessmentResults !=''">
+            assessment_results =#{assessmentResults},
+        </if>
+        update_time=#{updateTime}
+        where ar_id=#{arId}
+    </update>
+</mapper>

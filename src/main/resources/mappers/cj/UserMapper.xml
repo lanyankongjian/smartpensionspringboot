@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该xml文件所对应的JAVA接口类-->
+<mapper namespace="com.example.smartpensionspringboot.cj.mapper.UserMapper">
+    <resultMap id="user" type="com.example.smartpensionspringboot.cj.pojos.User">
+        <id  column="user_id" property="userId"/>
+        <result column="user_name" property="userName"></result>
+        <result column="user_pass" property="userPass"></result>
+    </resultMap>
+    <select id="Login" resultMap="user">
+        select * from user_ where user_name=#{userName} and user_pass=#{userPass}
+    </select>
+</mapper>

@@ -7,7 +7,7 @@ import java.util.Date;
 //健康管理--就医登记
 public class MedicalRegistration {
     private Integer mrId;
-    private Integer oldName;
+    private Integer mrOldName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
@@ -16,6 +16,15 @@ public class MedicalRegistration {
     private String placeOfMedical;
     private String diagnosisResults;
     private String medicalAdvice;
+    private RecOld recOld;
+
+    public RecOld getRecOld() {
+        return recOld;
+    }
+
+    public void setRecOld(RecOld recOld) {
+        this.recOld = recOld;
+    }
 
     public Integer getMrId() {
         return mrId;
@@ -25,12 +34,12 @@ public class MedicalRegistration {
         this.mrId = mrId;
     }
 
-    public Integer getOldName() {
-        return oldName;
+    public Integer getMrOldName() {
+        return mrOldName;
     }
 
-    public void setOldName(Integer oldName) {
-        this.oldName = oldName;
+    public void setMrOldName(Integer mrOldName) {
+        this.mrOldName = mrOldName;
     }
 
     public Date getUpdateTime() {

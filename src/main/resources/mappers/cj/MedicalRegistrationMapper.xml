@@ -1,0 +1,76 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该xml文件所对应的JAVA接口类-->
+<mapper namespace="com.example.smartpensionspringboot.cj.mapper.MedicalRegistrationMapper">
+    <resultMap id="mr" type="com.example.smartpensionspringboot.cj.pojos.MedicalRegistration">
+        <id  column="mr_id" property="mrId"/>
+        <result column="old_name" property="mrOldName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="medical_time" property="medicalTime"/>
+        <result column="physician" property="physician"/>
+        <result column="place_of_medical" property="placeOfMedical"/>
+        <result column="diagnosis_results" property="diagnosisResults"/>
+        <result column="medical_advice" property="medicalAdvice"/>
+        <association property="recOld" resultMap="ro"></association>
+    </resultMap>
+    <resultMap id="ro" type="com.example.smartpensionspringboot.cj.pojos.RecOld">
+        <id column="old_id" property="oldId"/>
+        <result column="rooldname" property="oldName"/>
+    </resultMap>
+    <select id="selectAll" resultMap="mr">
+        select mr.*,ro.* ,ro.old_name rooldname from Medical_registration mr inner join rec_old ro on mr.old_name=ro.old_id
+        <where>
+            <if test="mrOldName!=null" >
+                mr.old_name=#{mrOldName}
+            </if>
+            <if test="updateTime!=null" >
+                and mr.update_time=#{updateTime}
+            </if>
+            <if test="medicalTime!=null" >
+                and mr.medical_time=#{medicalTime}
+            </if>
+            <if test="physician !=null and physician !=''">
+                and mr.physician like '%${physician}%'
+            </if>
+            <if test=" placeOfMedical !=null and  placeOfMedical !=''">
+                and mr.place_of_medical like '%${placeOfMedical}%'
+            </if>
+            <if test="diagnosisResults !=null and diagnosisResults !=''">
+                and mr.diagnosis_results =#{diagnosisResults}
+            </if>
+            <if test="medicalAdvice !=null and medicalAdvice !='' ">
+                and mr.medical_advice =#{medicalAdvice}
+            </if>
+        </where>
+        order by mr.mr_id desc
+    </select>
+    <select id="selectName" resultMap="ro">
+        select *,old_name rooldname from rec_old
+    </select>
+    <insert id="insert" parameterType="com.example.smartpensionspringboot.cj.pojos.MedicalRegistration">
+        insert into Medical_registration(old_name,update_time,medical_time,physician,place_of_medical,diagnosis_results,medical_advice) values(#{mrOldName},#{updateTime},#{medicalTime},
+        #{physician},#{placeOfMedical},#{diagnosisResults},#{medicalAdvice})
+    </insert>
+    <delete id="delete">
+        delete from Medical_registration where mr_id=#{mrId}
+    </delete>
+    <update id="update" parameterType="com.example.smartpensionspringboot.cj.pojos.MedicalRegistration">
+        update Medical_registration set medical_advice=#{medicalAdvice},
+        <if test="mrOldName!=null" >
+            old_name=#{mrOldName},
+        </if>
+        <if test="medicalTime!=null" >
+           medical_time=#{medicalTime},
+        </if>
+        <if test="physician !=null and physician !=''">
+            physician=#{physician},
+        </if>
+        <if test=" placeOfMedical !=null and  placeOfMedical !=''">
+             place_of_medical =#{placeOfMedical},
+        </if>
+        <if test="diagnosisResults !=null and diagnosisResults !=''">
+            diagnosis_results =#{diagnosisResults},
+        </if>
+        update_time=#{updateTime}
+        where mr_id=#{mrId}
+    </update>
+</mapper>
