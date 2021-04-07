@@ -13,6 +13,7 @@ import java.util.Map;
 public interface UserMapper {
     User Login(@Param("userName") String userName,@Param("userPass") String userPass);
     Map oldNum();
-    Map waiChu();
+    Map tanShi();
     Map ruZhu();
+    Map waiChu();
 }

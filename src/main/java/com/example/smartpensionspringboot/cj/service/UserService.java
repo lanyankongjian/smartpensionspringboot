@@ -23,10 +23,13 @@ public class UserService {
     public Map oldNum(){
         return userMapper.oldNum();
     }
-    public Map waiChu(){
-        return userMapper.waiChu();
+    public Map tanShi(){
+        return userMapper.tanShi();
     }
     public Map ruZhu(){
         return userMapper.ruZhu();
+    }
+    public Map waiChu(){
+        return userMapper.waiChu();
     }
 }

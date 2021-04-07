@@ -21,12 +21,16 @@ public class UserController {
     public Map oldNum(){
         return userService.oldNum();
     }
-    @GetMapping("/waiChu")
-    public Map waiChu(){
-        return userService.waiChu();
+    @GetMapping("/tanShi")
+    public Map tanShi(){
+        return userService.tanShi();
     }
     @GetMapping("/ruZhu")
     public Map ruZhu(){
         return userService.ruZhu();
+    }
+    @GetMapping("/waiChu")
+    public Map waiChu(){
+        return userService.waiChu();
     }
 }
