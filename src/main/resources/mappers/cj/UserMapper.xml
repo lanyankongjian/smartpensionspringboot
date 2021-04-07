@@ -9,4 +9,13 @@
     <select id="Login" resultMap="user">
         select * from user_ where user_name=#{userName} and user_pass=#{userPass}
     </select>
+    <select id="oldNum" resultType="java.util.Map">
+         select count(old_id) zaizhu from rec_old
+    </select>
+    <select id="waiChu" resultType="java.util.Map">
+        select count(v_id) waichu from old_visit where TO_DAYS(v_ctime) = TO_DAYS(NOW());
+    </select>
+    <select id="ruZhu" resultType="java.util.Map">
+        select count(old_id) ruzhu from rec_old where TO_DAYS(join_time) = TO_DAYS(NOW());
+    </select>
 </mapper>
