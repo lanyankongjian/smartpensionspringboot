@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.PrestoreDao">
+    <resultMap id="PrestoreMap" type="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+        <id column="id" property="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="detail_id" column="detail_id"/>
+        <result property="amount" column="amount"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="phone" column="phone"/>
+        </association>
+        <association property="detailStorage" javaType="com.example.smartpensionspringboot.lbb.pojos.DetailStorage">
+            <id column="id" property="id"/>
+            <result property="amount" column="amount"/>
+            <result property="charging_time" column="charging_time"/>
+            <result property="dexplain" column="dexplain"/>
+            <result property="amount" column="amount"/>
+            <result property="payment" column="payment"/>
+            <result property="remark" column="remark"/>
+        </association>
+        <association property="bed" javaType="com.example.smartpensionspringboot.lbb.pojos.Bed">
+            <id property="bedId" column="bed_id"/>
+            <result property="bedType" column="bedType"/>
+            <result property="isroom" column="isroom"/>
+            <result property="cost" column="cost"/>
+            <result property="bed" column="bed"/>
+            <result property="remarks" column="remarks"/>
+        </association>
+    </resultMap>
+    <!--获取所有预存信息-->
+    <select id="getAllPrestore" resultMap="PrestoreMap">
+        SELECT cp.id,ro.old_name,ro.phone,ro.identitycard,ro.old_id,cds.amount,rb.bed
+        FROM cost_prestore cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        LEFT JOIN cost_detail_storage cds ON cp.detail_id = cds.id
+        LEFT JOIN rec_bed rb ON cp.old_id = rb.old_id
+        ORDER BY cp.id DESC
+    </select>
+    <!--获取某个老人的预存信息-->
+    <select id="getPrestoreByOldId" resultMap="PrestoreMap" parameterType="int">
+        SELECT cds.tollman,cds.charging_time,cds.dexplain,cds.payment,cds.amount,cds.remark
+        FROM cost_prestore cp
+        LEFT JOIN cost_detail_storage cds ON cds.id = cp.detail_id
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        where ro.old_id = #{id}
+    </select>
+    <!--新增预存-->
+    <insert id="addPrestore" parameterType="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+        insert into cost_prestore(old_id,detail_id,amount,remark)
+        values(#{old_id},#{detail_id},#{amount},#{remark})
+    </insert>
+    <!--<select id="getPrestoreById" resultMap="PrestoreMap">
+        SELECT cp.id,ro.old_id,cp.amount,cp.remark
+        FROM cost_prestore cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        where ro.old_id = #{id}
+    </select>-->
+    <!--修改预存信息-->
+    <update id="updatePrestore" parameterType="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+        update cost_prestore
+        <trim prefix="set" suffixOverrides=",">
+            <if test="old_id != null and old_id != ''">
+                old_id = #{old_id}
+            </if>
+            <if test="detail_id != null and detail_id != ''">
+                detail_id = #{detail_id}
+            </if>
+            <if test="amount != null and amount != ''">
+                amount = #{amount}
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark}
+            </if>
+            <if test="insert_time != null">
+                insert_time = #{insert_name}
+            </if>
+            <if test="update_time != null">
+                update_time = #{update_name}
+            </if>
+            <if test="delete_time != null">
+                delete_time = #{delete_name}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <!--根据编号获取预存-->
+    <select id="getPrestoreByPId" resultMap="PrestoreMap">
+        select * from cost_prestore where id = #{id}
+    </select>
+    <!--搜索预存-->
+    <select id="getPrestoreBySearch" resultMap="PrestoreMap" parameterType="com.example.smartpensionspringboot.lbb.vo.PrestoreVo">
+        SELECT cp.id,ro.old_name,ro.phone,ro.identitycard,ro.old_id,cds.amount,rb.bed
+        FROM cost_prestore cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        LEFT JOIN cost_detail_storage cds ON cp.detail_id = cds.id
+        LEFT JOIN rec_bed rb ON cp.old_id = rb.old_id
+        <where>
+                <if test="old_name != null and old_name != ''">
+                   and ro.old_name LIKE CONCAT('%',#{old_name},'%')
+                </if>
+                <if test="phone != null and phone != ''">
+                   and ro.phone LIKE CONCAT('%',#{phone},'%')
+                </if>
+                <if test="identitycard != null and identitycard != ''">
+                   and ro.identitycard LIKE CONCAT('%',#{identitycard},'%')
+                </if>
+        </where>
+        ORDER BY cp.id DESC
+    </select>
+</mapper>

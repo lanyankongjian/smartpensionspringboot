@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.fbm.dao.FbmFootCategoryMapper">
+    <resultMap id="BaseMapper" type="com.example.smartpensionspringboot.fbm.pojos.FbmFootCategory">
+    <id column="fc_id" property="fcId"></id>
+        <result column="fc_name" property="fcName"/>
+        <result column="fc_describe" property="fcDescribe"/>
+    </resultMap>
+<select id="findBy" resultMap="BaseMapper" parameterType="com.example.smartpensionspringboot.fbm.vo.ParamsVo">
+    select * from fbm_foot_category
+    <where>
+        <if test="name != null and name != ''">
+             fc_name like concat('%', #{name}, '%')
+        </if>
+    </where>
+    order by fc_id desc
+</select>
+    <insert id="addFoot" parameterType="com.example.smartpensionspringboot.fbm.pojos.FbmFootCategory">
+        INSERT INTO fbm_foot_category(fc_name,fc_describe)
+        values
+        (#{fcName},#{fcDescribe})
+    </insert>
+<!--    <delete id="updateFoot" parameterType="com.example.smartpensionspringboot.fbm.pojos.FbmFootCategory">-->
+<!--        -->
+<!--       -->
+
+<!--    </delete>-->
+    <update id="updateFoot" parameterType="com.example.smartpensionspringboot.fbm.pojos.FbmFootCategory">
+        update fbm_foot_category set
+        <if test="fcName!=null">
+            fc_name=#{fcName},
+        </if>
+        <if test="fcDescribe!=null">
+            fc_describe=#{fcDescribe}
+        </if>
+        where fc_id=#{fcId}
+   </update>
+    <delete id="deleteCategory" parameterType="integer">
+        delete from fbm_foot_category where fc_id=#{id}
+
+
+
+    </delete>
+
+    <select id="find" resultType="com.example.smartpensionspringboot.fbm.pojos.FbmFood">
+        select *from fbm_food
+        where fc_id=#{id}
+    </select>
+</mapper>

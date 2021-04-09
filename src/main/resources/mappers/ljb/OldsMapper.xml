@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.OldDao">
+    <resultMap id="oldMapper" type="recOld">
+        <id column="old_id" property="oldId"/>
+        <result column="old_name" property="oldName"/>
+        <result column="identitycard" property="identitycard"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="contract_time" property="contractTime"/>
+        <result column="join_time" property="joinTime"/>
+        <result column="handle" property="handle"/>
+        <result column="archives" property="archives"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+<!--    获取所有老人信息-->
+    <select id="getAllOld" resultMap="oldMapper">
+        select * from rec_old order by ctime desc
+    </select>
+
+<!--   模糊查询 -->
+    <select id="fazzySearchByOld" resultMap="oldMapper">
+        select * from rec_old
+        <where>
+            <if test="oldName != null">
+                and old_name like concat('%',#{oldName},'%')
+            </if>
+            <if test="identitycard != null">
+                and identitycard like concat('%',#{identitycard},'%')
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+        </where>
+        order by ctime desc
+    </select>
+
+<!--  添加老人信息  -->
+    <insert id="addOld" parameterType="recOld" useGeneratedKeys="true" keyProperty="oldId">
+        INSERT INTO rec_old (`old_name`,`identitycard`,`gender`,`phone`,`address`,`contract_time`,
+                            `join_time`,`handle`,`archives`,`ctime`,`status`)
+            VALUES(#{oldName},#{identitycard},#{gender},#{phone},#{address},#{contractTime},#{joinTime},#{handle},#{archives},#{ctime},#{status})
+    </insert>
+
+<!--    逻辑删除老人信息-->
+<!--    <update id="" parameterType="">-->
+<!--        update rec_old set dtime = #{dtime} , status = #{status} where-->
+<!--    </update>-->
+
+    <select id="getOldByOldId" resultMap="oldMapper">
+        select * from rec_old where old_id = #{oldId}
+    </select>
+</mapper>

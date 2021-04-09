@@ -1,0 +1,24 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.RecTotalCostMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.pojos.RecTotalCost">
+        <result property="totalCost" column="total_cost" />
+        <result property="resId" column="resId" />
+        <result property="bedId" column="bed_id"/>
+        <result property="nursingId" column="nursing_id" />
+        <result property="feesPayable" column="fees_payable" />
+        <result property="reductionCost" column="reduction_cost"/>
+        <result property="discountCost" column="discount_cost" />
+        <result property="actualCost" column="actual_cost" />
+        <result property="payWay" column="pay_way"/>
+        <result property="remarks" column="remarks" />
+        <result property="ctime" column="ctime" />
+        <result property="utime" column="utime"/>
+        <result property="dtime" column="dtime"/>
+    </resultMap>
+    <select id="selectRecTotalCost" resultMap="result">
+        select * from rec_old where old_name=#{OldName}
+    </select>
+</mapper>

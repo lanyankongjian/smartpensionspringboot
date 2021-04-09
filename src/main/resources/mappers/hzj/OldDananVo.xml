@@ -1,0 +1,73 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.OldDananVoMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.vo.OldDananVo">
+<!--        //老人信息表-->
+        <result property="oldId" column="old_id" />
+        <result property="oldName" column="old_name" />
+        <result property="identitycard" column="identitycard" />
+        <result property="gender" column="gender"/>
+        <result property="phone" column="phone" />
+        <result property="address" column="address" />
+        <result property="archives" column="archives"/>
+        <result property="status" column="status" />
+
+<!--        //体检信息表-->
+        <result property="updateTime" column="update_time" />
+        <result property="phyTime" column="phy_time"/>
+        <result property="regTime" column="reg_time" />
+        <result property="registrant" column="registrant"/>
+        <result property="registrantId" column="registrantId" />
+        <result property="phyHospital" column="phy_hospital"/>
+        <result property="phyExamination" column="phy_examination" />
+        <result property="phyPicture" column="phy_picture"/>
+        <result property="height" column="height" />
+        <result property="weight" column="weight"/>
+        <result property="temperature" column="temperature" />
+        <result property="highPressure" column="high_pressure"/>
+        <result property="lowPressure" column="low_pressure"/>
+        <result property="pulse" column="pulse" />
+        <result property="bloodOxygen" column="blood_oxygen"/>
+        <result property="fastingBlood" column="fasting_blood" />
+        <result property="postprandialBlood" column="postprandial_blood"/>
+        <result property="totalCholesterol" column="total_cholesterol"/>
+        <result property="hdl" column="hdl"/>
+        <result property="triglyceride" column="triglyceride" />
+        <result property="ldl" column="ldl"/>
+        <result property="uricAcid" column="uric_acid" />
+        <result property="qrsInterval" column="qrs_interval"/>
+        <result property="rrInterval" column="rr_interval" />
+        <result property="gpComments" column="gp_comments"/>
+        <result property="tdaResults" column="tda_results" />
+        <result property="heartRate" column="heart_rate"/>
+
+<!--        //家属信息表-->
+        <result property="familyname" column="familyname"/>
+        <result property="phones" column="phones"/>
+        <result property="identitycards" column="identitycards" />
+        <result property="relationship" column="relationship"/>
+        <result property="genders" column="genders" />
+        <result property="addresss" column="addresss"/>
+        <result property="guardian" column="guardian" />
+
+<!--        //健康信息表-->
+        <result property="selfcare" column="selfcare"/>
+        <result property="vision" column="vision"/>
+        <result property="hearing" column="hearing" />
+        <result property="doctor" column="doctor"/>
+        <result property="doctorPhone" column="doctor_phone" />
+        <result property="allergy" column="allergy"/>
+        <result property="medicalHistory" column="medical_history" />
+        <result property="mainDiseases" column="main_diseases" />
+    </resultMap>
+
+    <select id="selectOldDananVO" resultMap="result">
+      select * from  rec_family r
+    left join   rec_health_information rhi on rhi.old_id=r.old_id
+    left join   rec_old ro on ro.old_id=r.old_id
+    left join   expected_registration ep on ep.old_name=r.old_id
+    where r.old_id=#{oldid}
+   </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.BedsDao">
+    <resultMap id="BedMap" type="com.example.smartpensionspringboot.lbb.pojos.Bed">
+        <id property="bedId" column="bed_id"/>
+        <result property="bedType" column="bedType"/>
+        <result property="isroom" column="isroom"/>
+        <result property="cost" column="cost"/>
+        <result property="bed" column="bed"/>
+        <result property="remarks" column="remarks"/>
+        <result property="utime" column="utime"/>
+        <result property="ctime" column="ctime"/>
+        <result property="dtime" column="dtime"/>
+    </resultMap>
+    <!--根据老人编号获取床位-->
+    <select id="getBedByOldId" resultMap="BedMap">
+        select *
+        from rec_old ro
+        left join rec_bed rb on ro.old_id = rb.old_id
+        where ro.old_id = #{id}
+    </select>
+
+    <!--获取床位号-->
+    <select id="getBedByBed" resultMap="BedMap">
+        select bedId,bedType,isroom,cost,bed,remarks
+        from rec_bed
+        where bed = #{bed}
+    </select>
+    <!--添加床位-->
+    <insert id="addBed" parameterType="com.example.smartpensionspringboot.lbb.pojos.Bed">
+        insert into rec_bed(old_id,bedType,isroom,cost,bed,remarks)
+        values(#{old_id},#{bedType},#{isroom},#{cost},#{bed},#{remarks})
+    </insert>
+</mapper>

@@ -1,0 +1,80 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqactypeMapper">
+    <resultMap id="atype" type="OldAccidentTypeLQ">
+        <id column="at_id" property="atId"/>
+        <result column="at_name" property="atName"/>
+        <result column="at_level" property="atLevel"/>
+        <result column="at_described" property="atDescribed"/>
+        <result column="at_deal" property="atDeal"/>
+        <result column="at_state" property="atState"/>
+        <association property="nurse" javaType="NurseLQ">
+            <id property="nuId" column="nu_id"/>
+            <result column="nu_name" property="nuName"></result>
+            <result column="nu_phone" property="nuPhone"></result>
+        </association>
+
+    </resultMap>
+
+    <!--//查询所有
+     List<OldAccidentTypeLQ> selectactype();-->
+    <select id="selectactype" resultMap="atype">
+        select * from  old_accident_type oat left join nurse n on oat.nu_id=n.nu_id where oat.at_state=0 order by oat.at_id
+    </select>
+
+    <!--//删除历史
+    List<OldAccidentTypeLQ> history();-->
+    <select id="history" resultMap="atype">
+        select * from  old_accident_type oat left join nurse n on oat.nu_id=n.nu_id where oat.at_state=1 order by oat.at_id
+    </select>
+
+    <!--//新增
+    Integer inserttype(@Param("type") OldAccidentTypeLQ type);-->
+    <insert id="inserttype" parameterType="OldAccidentTypeLQ">
+        insert into old_accident_type value (null,#{type.atName},#{type.atLevel},#{type.nurse.nuId},#{type.atDescribed},#{type.atDeal},0)
+    </insert>
+
+    <!--//修改
+    Integer updatetype(@Param("type") OldAccidentTypeLQ type);-->
+    <update id="updatetype" parameterType="OldAccidentTypeLQ">
+        update old_accident_type set at_name=#{type.atName},at_level=#{type.atLevel},nu_id=#{type.nurse.nuId},at_described=#{type.atDescribed},at_deal=#{type.atDeal},at_state=#{type.atState} where at_id=#{type.atId}
+    </update>
+
+    <!--//恢复
+    Integer regaintype(@Param("atName") String atName,@Param("atLevel") String atLevel);-->
+    <update id="regaintype" parameterType="OldAccidentTypeLQ">
+        update old_accident_type set at_state=0 where at_name=#{atName}
+    </update>
+
+    <!--//根据类型名称来查询
+    OldAccidentTypeLQ selectTypeByTname(@Param("atName") String atName);-->
+    <select id="selectTypeByTname" resultMap="atype">
+        select * from old_accident_type where at_name=#{atName} and at_level=#{atLevel}
+    </select>
+
+    <!-- //根据类型id查询事故等级
+    OldAccidentTypeLQ findlevel(@Param("atId")Integer atId);-->
+    <select id="findlevel" resultMap="atype">
+        select * from old_accident_type where at_id=#{atId}
+    </select>
+
+    <!--//批量逻辑删除服务
+    Integer logicDeletetypes(List<Integer> params);-->
+    <update id="logicDeletetypes" parameterType="java.util.ArrayList">
+        update old_accident_type set at_state=1 where at_id in
+        <foreach collection="list" item="sid" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </update>
+
+    <!--//批量逻辑恢复服务
+    Integer logicregaintypes(List<Integer> params);-->
+    <update id="logicregaintypes" parameterType="java.util.ArrayList">
+        update old_accident_type set at_state=0 where at_id in
+        <foreach collection="list" item="sid" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </update>
+    
+
+</mapper>

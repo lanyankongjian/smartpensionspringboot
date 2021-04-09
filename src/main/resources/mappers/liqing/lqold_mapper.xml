@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqoldMapper">
+    <resultMap id="old" type="RecOldLQ">
+        <id column="old_id" property="oldId"></id>
+        <result column="old_name" property="oldName"></result>
+        <result column="identitycard" property="identitycard"></result>
+        <result column="gender" property="gender"></result>
+        <result column="phone" property="phone"></result>
+        <result column="address" property="address"></result>
+        <result column="status" property="status"></result>
+        <association property="register" javaType="OldOutRegisterLQ">
+            <id column="or_id" property="orId"></id>
+            <result column="or_back" property="orBack"></result>
+            <result column="or_state" property="orState"></result>
+        </association>
+    </resultMap>
+
+    <!-- //查询未返回的老人
+    List<RecOldLQ> selectAllold();-->
+    <select id="selectAllold" resultMap="old">
+        select * from rec_old ro left join old_out_register r on ro.old_id = r.old_id where ro.status !=0
+    </select>
+
+    <!--//查询所有老人
+    List<RecOldLQ> findAllold();-->
+    <select id="findAllold" resultMap="old">
+        select * from rec_old  where status=1
+    </select>
+
+
+
+</mapper>

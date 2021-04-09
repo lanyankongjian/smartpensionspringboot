@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.PaymentDao">
+    <resultMap id="PaymentMap" type="com.example.smartpensionspringboot.lbb.pojos.Payment">
+        <id column="id" property="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="payer" column="payer"/>
+        <result property="amount" column="amount"/>
+        <result property="amount_time" column="amount_time"/>
+        <result property="registrant" column="registrant"/>
+        <result property="style" column="style"/>
+        <result property="state" column="state"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="gender" column="gender"/>
+            <result property="phone" column="phone"/>
+        </association>
+        <association property="bed" javaType="com.example.smartpensionspringboot.lbb.pojos.Bed">
+            <id property="bedId" column="bed_id"/>
+            <result property="bedType" column="bedType"/>
+            <result property="isroom" column="isroom"/>
+            <result property="cost" column="cost"/>
+            <result property="bed" column="bed"/>
+            <result property="remarks" column="remarks"/>
+        </association>
+    </resultMap>
+    <!--获取交费信息-->
+    <select id="getPayment" resultMap="PaymentMap">
+        SELECT ro.old_name,cp.amount,cp.amount_time,cp.payer,cp.style,cp.state,cp.registrant,cp.remark,rb.bed
+        FROM cost_payment cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        left join rec_bed rb ON rb.old_id = ro.old_id order by cp.id desc
+    </select>
+    <!--新增交费信息-->
+    <insert id="addPayment" parameterType="com.example.smartpensionspringboot.lbb.pojos.Payment">
+        insert into cost_payment(old_id,payer,amount,amount_time,registrant,style,state,remark)
+        values (#{old_id},#{payer},#{amount},#{amount_time},#{registrant},#{style},#{state},#{remark})
+    </insert>
+    <!--搜索交费信息-->
+    <select id="getPaymentBySearch" resultMap="PaymentMap" parameterType="com.example.smartpensionspringboot.lbb.vo.PaymentVo">
+        SELECT ro.old_name,cp.amount,cp.amount_time,cp.payer,cp.style,cp.state,cp.registrant,cp.remark,rb.bed
+        FROM cost_payment cp
+        LEFT JOIN rec_old ro ON cp.old_id = ro.old_id
+        left join rec_bed rb ON rb.old_id = ro.old_id
+        <where>
+            <if test="old_name != null and old_name != ''">
+                and ro.old_name LIKE CONCAT('%',#{old_name},'%')
+            </if>
+        </where>
+        order by cp.id desc
+    </select>
+</mapper>

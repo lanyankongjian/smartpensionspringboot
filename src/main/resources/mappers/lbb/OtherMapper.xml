@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.OtherDao">
+    <resultMap id="OtherMap" type="com.example.smartpensionspringboot.lbb.pojos.Other">
+        <id property="id" column="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="category_id" column="category_id"/>
+        <result property="money" column="money"/>
+        <result property="money_time" column="money_time"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+        </association>
+        <association property="categorys" javaType="com.example.smartpensionspringboot.lbb.pojos.Category">
+            <id column="id" property="id"/>
+            <result property="category_name" column="category_name"/>
+        </association>
+    </resultMap>
+    <!--消费登记-->
+    <insert id="addOther" parameterType="com.example.smartpensionspringboot.lbb.vo.OtherVo">
+        INSERT INTO cost_other(old_id,category_id,money,money_time,remark)
+        VALUES(#{old_id},#{category_id},#{money},#{money_time},#{remark})
+    </insert>
+</mapper>

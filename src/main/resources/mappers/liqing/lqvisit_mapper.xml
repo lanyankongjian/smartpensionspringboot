@@ -1,0 +1,82 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqvisitMapper">
+    <resultMap id="visit" type="OldVisitLQ">
+        <id column="v_id" property="vId"></id>
+        <result column="v_cname" property="vCname"></result>
+        <result column="v_cphone" property="vCphone"></result>
+        <result column="v_relation" property="vRelation"></result>
+        <result column="v_ctime" property="vCtime"></result>
+        <result column="v_gtime" property="vGtime"></result>
+        <result column="v_cause" property="vCause"></result>
+        <result column="v_remark" property="vRemark"></result>
+        <result column="v_leave" property="vLeave"></result>
+        <result column="v_state" property="vState"></result>
+        <association property="old" javaType="RecOldLQ">
+            <id property="oldId" column="old_id"/>
+            <result column="old_name" property="oldName"></result>
+        </association>
+        <association property="user" javaType="UserLQ">
+            <id property="userId" column="user_id"/>
+            <result column="user_name" property="userName"></result>
+        </association>
+    </resultMap>
+
+    <!--//查询所有
+    List<OldVisitLQ> selectAllvisit();-->
+    <select id="selectAllvisit" resultMap="visit">
+        select * from old_visit v left join rec_old ro on v.old_id = ro.old_id left join user_ u on u.user_id = v.user_id where v.v_state=0 order by v.v_ctime
+    </select>
+
+    <!--//删除历史
+    List<OldVisitLQ> history();-->
+    <select id="history" resultMap="visit">
+        select * from old_visit v left join rec_old ro on v.old_id = ro.old_id left join user_ u on u.user_id = v.user_id where v.v_state=1 order by v.v_ctime
+    </select>
+
+   <!-- //新增
+    Integer insertvisit(@Param("v")OldVisitLQ v);-->
+    <insert id="insertvisit" parameterType="OldVisitLQ">
+        insert into old_visit value (null,#{v.vCname},#{v.vCphone},#{v.old.oldId},#{v.user.userId},#{v.vRelation},#{v.vCtime},#{v.vGtime},
+        #{v.vCause},#{v.vRemark},0,0)
+    </insert>
+
+    <!--//修改
+    Integer updatevisit(@Param("v")OldVisitLQ v);-->
+    <update id="updatevisit" parameterType="OldVisitLQ">
+        update old_visit set v_cname=#{v.vCname},v_cphone=#{v.vCphone},old_id=#{v.old.oldId},user_id=#{v.user.userId},v_relation=#{v.vRelation},v_ctime=#{v.vCtime},
+        v_gtime=#{v.vGtime},v_cause=#{v.vCause},v_remark=#{v.vRemark},v_leave=#{v.vLeave},v_state=#{v.vState} where v_id=#{v.vId}
+    </update>
+
+    <!--//高级查询
+    List<OldVisitLQ> adQueryvisit(@Param("vCname") String vCname,@Param("oldName") String oldName,
+    @Param("sartDate") String sartDate, @Param("endDate") String endDate);-->
+    <select id="adQueryvisit" resultMap="visit">
+        select * from old_visit v left join rec_old ro on v.old_id = ro.old_id left join user_ u on u.user_id = v.user_id
+        <where>
+            v.v_state=0
+            <if test="vCname!=null">
+                and v.v_cname like concat('%',#{vCname},'%')
+            </if>
+            <if test="oldName!=null">
+                and ro.old_name like concat('%',#{oldName},'%')
+            </if>
+
+            <if test="sartDate!=null and endDate!=null">
+                and v.v_ctime between #{sartDate}and #{endDate}
+            </if>
+        </where>
+        order by v.v_ctime
+    </select>
+
+    <!--//批量逻辑删除服务
+    Integer logicDeleteVisits(List<Integer> params);-->
+    <update id="logicDeleteVisits" parameterType="java.util.ArrayList">
+        update old_visit set v_state=1 where v_id in
+        <foreach collection="list" item="sid" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </update>
+
+
+</mapper>

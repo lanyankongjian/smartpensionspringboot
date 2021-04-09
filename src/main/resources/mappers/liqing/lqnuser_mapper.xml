@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqnurseMapper">
+    <resultMap id="nurse" type="NurseLQ">
+        <id column="nu_id" property="nuId"/>
+        <result column="nu_name" property="nuName"></result>
+        <result column="nu_phone" property="nuPhone"></result>
+    </resultMap>
+
+    <!--//查询所有护工
+    List<NurseLQ> selectnurse();-->
+    <select id="selectnurse" resultMap="nurse">
+        select * from nurse
+    </select>
+
+    <!--//根据护工id查询电话
+    NurseLQ findphone(@Param("nuId")Integer nuId);-->
+    <select id="findphone" resultMap="nurse">
+        select * from  nurse where nu_id=#{nuId}
+    </select>
+
+
+</mapper>

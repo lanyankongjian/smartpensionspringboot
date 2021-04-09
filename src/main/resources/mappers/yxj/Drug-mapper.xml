@@ -1,0 +1,70 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.smartpensionspringboot.yxj.mapper.DrugMapper">
+
+    <resultMap id="drug" type="com.example.smartpensionspringboot.yxj.pojos.Drug">
+        <id column="drug_id" property="drugId"></id>
+        <result column="drug_code" property="drugCode"></result>
+        <result column="drug_name" property="drugName"></result>
+        <result column="drug_size" property="drugSize"></result>
+        <result column="drug_type" property="drugType"></result>
+        <result column="drug_vender" property="drugVender"></result>
+
+        <collection property="categories" javaType="com.example.smartpensionspringboot.yxj.pojos.Categorys">
+            <id column="category_id" property="categoryId"></id>
+            <result column="category_name" property="categoryName"></result>
+        </collection>
+
+    </resultMap>
+
+
+    <!--  查询药品字典表和药品类别表 -->
+    <select id="drugList" resultMap="drug">
+        SELECT * FROM drug d LEFT JOIN category c ON d.category_id = c.category_id
+        <where>
+            <if test="drugCode !=null and drugCode!='' ">
+                d.drug_code like '%${drugCode}%'
+            </if>
+            <if test="drugName !=null and drugName!='' ">
+                or d.drug_name like '%${drugName}%'
+            </if>
+        </where>
+        order by drug_id desc
+    </select>
+
+
+    <!--  查询类别表  -->
+    <resultMap id="categorys" type="com.example.smartpensionspringboot.yxj.pojos.Categorys">
+        <id column="category_id" property="categoryId"></id>
+        <result column="category_name" property="categoryName"></result>
+    </resultMap>
+
+    <select id="categoryList" resultMap="categorys">
+        SELECT * FROM category
+    </select>
+
+    <!--  新增药品  -->
+    <insert id="saveDrug">
+        INSERT INTO drug(drug_id,drug_code,drug_name,drug_size,drug_type,drug_vender,category_id)
+        VALUES(#{drugId},#{drugCode},#{drugName},#{drugSize},#{drugType},#{drugVender},#{categoryId})
+    </insert>
+
+
+    <!--  修改药品  -->
+    <update id="updateDrug">
+        UPDATE drug SET
+        drug_code = #{drugCode},
+        drug_name = #{drugName},
+        drug_size = #{drugSize},
+        drug_type = #{drugType},
+        drug_vender = #{drugVender},
+        category_id = #{categoryId}
+        WHERE drug_id = #{drugId}
+    </update>
+    
+    <!--  删除药品  -->
+    <delete id="deleteDrug">
+        delete from drug where drug_id = #{drugId};
+    </delete>
+</mapper>
+

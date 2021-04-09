@@ -1,0 +1,113 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqregisterMapper">
+    <resultMap id="register" type="OldOutRegisterLQ">
+        <id column="or_id" property="orId"></id>
+        <result column="or_backid" property="orBackid"></result>
+        <result column="or_time" property="orTime"></result>
+        <result column="or_plantime" property="orPlantime"></result>
+        <result column="or_pretime" property="orPretime"></result>
+        <result column="or_cause" property="orCause"></result>
+        <result column="or_daynum" property="orDaynum"></result>
+        <result column="or_back" property="orBack"></result>
+        <result column="or_state" property="orState"></result>
+        <association property="old" javaType="RecOldLQ">
+        <id property="oldId" column="old_id"/>
+        <result column="old_name" property="oldName"></result>
+        </association>
+        <association property="user" javaType="UserLQ">
+            <id property="userId" column="user_id"/>
+            <result column="user_name" property="userName"></result>
+        </association>
+        <association property="family" javaType="RecFamilyLQ">
+            <id property="familyId" column="family_id"/>
+            <result column="familyname" property="familyname"></result>
+            <result column="phone" property="phone"></result>
+            <result column="identitycard" property="identitycard"></result>
+            <result column="address" property="address"></result>
+        </association>
+        <association property="bed" javaType="RecBedLQ">
+            <id property="bedId" column="bed_id"/>
+            <result column="bed" property="bed"></result>
+            <association property="old" javaType="RecOldLQ">
+                <id property="oldId" column="old_id"/>
+                <result column="old_name" property="oldName"></result>
+            </association>
+        </association>
+    </resultMap>
+
+    <!--//查询所有
+    List<OldOutRegisterLQ> selectregister();-->
+    <select id="selectregister" resultMap="register">
+        select * from old_out_register r left join user_ u on r.user_id = u.user_id left join user_ us on r.or_backid = us.user_id left join rec_bed rb on r.bed_id = rb.bed_id
+     left join rec_old ro on ro.old_id=r.old_id left join rec_family rf on r.family_id = rf.family_id where r.or_state=0 order by r.or_time desc
+    </select>
+
+    <!-- //删除历史
+    List<OldOutRegisterLQ> history();-->
+    <select id="history" resultMap="register">
+        select * from old_out_register r left join user_ u on r.user_id = u.user_id left join user_ us on r.or_backid = us.user_id left join rec_bed rb on r.bed_id = rb.bed_id
+     left join rec_old ro on ro.old_id=r.old_id left join rec_family rf on r.family_id = rf.family_id where r.or_state=1 order by r.or_time desc
+    </select>
+
+    <!--//查询超过时间的老人
+    List<OldOutRegisterLQ> overtimes();-->
+    <select id="overtimes" resultMap="register">
+        select * from old_out_register r left join user_ u on r.user_id = u.user_id left join user_ us on r.or_backid = us.user_id left join rec_bed rb on r.bed_id = rb.bed_id
+     left join rec_old ro on ro.old_id=r.old_id left join rec_family rf on r.family_id = rf.family_id where r.or_state=0 and NOW() &gt; r.or_plantime and r.or_back=0 order by r.or_plantime asc
+    </select>
+
+
+    <!--//新增
+    Integer insertrigister(@Param("rigister")OldOutRegisterLQ r);-->
+    <insert id="insertrigister" parameterType="OldOutRegisterLQ">
+        insert into old_out_register value (null,#{r.old.oldId},#{r.user.userId},#{r.bed.bedId},#{r.family.familyId},
+        #{r.orBackid},#{r.orTime},#{r.orPlantime},#{r.orPretime},#{r.orCause},#{r.orDaynum},0,0)
+    </insert>
+
+    <!--//修改
+    Integer updaterigister(@Param("rigister")OldOutRegisterLQ r);-->
+    <update id="updaterigister" parameterType="OldOutRegisterLQ">
+        update old_out_register set old_id=#{r.old.oldId},user_id=#{r.user.userId},bed_id=#{r.bed.bedId},family_id=#{r.family.familyId},or_backid=#{r.orBackid},
+        or_plantime=#{r.orPlantime},or_pretime=#{r.orPretime},or_cause=#{r.orCause},or_daynum=#{r.orDaynum},or_back=#{r.orBack} where or_id=#{r.orId}
+    </update>
+
+    <!--//删除
+    Integer deleteregister(@Param("orId") Integer orId);-->
+    <update id="deleteregister" parameterType="OldOutRegisterLQ">
+        update old_out_register set or_state=1 where or_id=#{orId}
+    </update>
+
+
+
+    <!--//高级查询
+    List<OldOutRegisterLQ> adQueryrigister(@Param("old_id") String old_id, @Param("or_back") Integer or_back,
+                                           @Param("sartDate") String sartDate, @Param("endDate") String endDate);-->
+    <select id="adQueryrigister" resultMap="register">
+        select * from old_out_register r left join user_ u on r.user_id = u.user_id left join rec_bed rb on r.bed_id = rb.bed_id
+   left join rec_old ro on ro.old_id=r.old_id left join rec_family rf on r.family_id = rf.family_id
+   <where>
+       r.or_state=0
+       <if test="oldName!=null">
+           and ro.old_name like concat('%',#{oldName},'%')
+       </if>
+       <if test="orBack!=null">
+           and r.or_back=#{orBack}
+       </if>
+       <if test="sartDate!=null and endDate!=null">
+           and r.or_time between #{sartDate}and #{endDate}
+       </if>
+   </where>
+        order by r.or_time desc
+    </select>
+
+    <!--//批量逻辑删除
+    Integer logicDeleteregisters(List<Integer> params);-->
+    <update id="logicDeleteregisters" parameterType="java.util.ArrayList">
+        update old_out_register set or_state=1 where or_id in
+        <foreach collection="list" item="orId" open="(" separator="," close=")">
+            #{orId}
+        </foreach>
+    </update>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.PayDao">
+    <resultMap id="PayMap" type="com.example.smartpensionspringboot.lbb.pojos.Pay">
+        <id column="id" property="id"/>
+        <result property="tollman" column="tollman"/>
+        <result property="amount_time" column="amount_time"/>
+        <result property="old_id" column="old_id"/>
+        <result property="amount" column="amount"/>
+        <result property="pay_style" column="pay_style"/>
+        <result property="payer" column="payer"/>
+        <result property="remark" column="remark"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id column="old_id" property="oldId"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="gender" column="gender"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+    <!--获取入住缴费信息-->
+    <select id="getPay" resultMap="PayMap">
+        SELECT cp.id,ro.old_name,cp.tollman,cp.payer,cp.amount,cp.amount_time,cp.pay_style,
+                cp.remark,cp.insert_time,cp.update_time,cp.delete_time
+        FROM cost_pay cp
+        left join rec_old ro on cp.old_id = ro.old_id
+    </select>
+    <!--入住缴费-->
+    <insert id="addPay" parameterType="com.example.smartpensionspringboot.lbb.vo.PayVo">
+        INSERT INTO cost_pay(old_id,tollman,payer,amount,amount_time,pay_style,remark)
+        VALUE(#{old_id},#{tollman},#{payer},#{amount},#{amount_time},#{pay_style},#{remark})
+    </insert>
+</mapper>

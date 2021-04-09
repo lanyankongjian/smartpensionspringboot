@@ -1,0 +1,33 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.StaybackDengjiMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.pojos.StaybackDengji">
+
+        <result property="dengjiId" column="dengji_id" />
+        <result property="oldid" column="oldid" />
+        <result property="oldName" column="oldName" />
+        <result property="identitycard" column="identitycard"/>
+        <result property="endtime" column="endtime" />
+        <result property="outof" column="outof" />
+        <result property="dengjiren" column="dengjiren"/>
+        <result property="cause" column="cause" />
+        <result property="joinTime" column="joinTime" />
+    </resultMap>
+    <insert id="insertStaybackDengji" parameterType="com.example.smartpensionspringboot.hzj.pojos.StaybackDengji">
+      INSERT INTO stayback_dengji
+         (oldid,oldName,identitycard,endtime,outof,dengjiren,cause,joinTime)
+        VALUES
+         (#{oldid},#{oldName},#{identitycard},#{endtime},#{outof},#{dengjiren},#{cause},#{joinTime})
+   </insert>
+
+    <select id="selectDengji" resultMap="result">
+        select * from stayback_dengji
+    </select>
+
+    <select id="selectDengjiName" resultMap="result">
+<!--        select * from stayback_set where oldName=#{setname}-->
+        select * from stayback_dengji where oldName=#{oldname}
+    </select>
+</mapper>

@@ -1,0 +1,51 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.NursingDao">
+    <resultMap id="nursingMap" type="recNursing">
+        <id column="nursing_id" property="nursingId"/>
+        <result column="old_id" property="oldId"/>
+        <result column="nursing_level" property="nursingLevel"/>
+        <result column="level_explain" property="levelExplain"/>
+        <result column="nursing_level_cost" property="nursingLevelCost"/>
+        <result column="all_nursing_cost" property="allNursingCost"/>
+        <result column="customized_cost" property="customizedCost"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+    </resultMap>
+
+    <insert id="addNursing" parameterType="recNursing">
+        INSERT INTO `rec_nursing` (`old_id`,`nursing_level`,`level_explain`,`nursing_level_cost`,`all_nursing_cost`,
+            `customized_cost`,`ctime`)
+            VALUES(#{oldId},#{nursingLevel},#{levelExplain},#{nursingLevelCost},#{allNursingCost},
+           #{customizedCost},#{ctime})
+    </insert>
+
+
+    <update id="upNursing" parameterType="recNursing">
+        update rec_nursing
+        <set>
+            <if test="nursingLevel != null">
+                nursing_level = #{nursingLevel},
+            </if>
+            <if test="levelExplain != null">
+                level_explain = #{levelExplain},
+            </if>
+            <if test="nursingLevelCost != null">
+                nursing_level_cost = #{nursingLevelCost},
+            </if>
+            <if test="allNursingCost != null">
+                all_nursing_cost = #{allNursingCost},
+            </if>
+            <if test="customizedCost != null">
+                customized_cost = #{customizedCost},
+            </if>
+        </set>
+        where old_id = #{oldId}
+    </update>
+
+    <select id="getNursingByOldId" parameterType="long" resultMap="nursingMap">
+        select * from rec_nursing where old_id = #{oldId}
+    </select>
+</mapper>

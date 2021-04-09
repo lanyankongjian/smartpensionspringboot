@@ -1,0 +1,30 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqfamilyMapper">
+    <resultMap id="family" type="RecFamilyLQ">
+        <id property="familyId" column="family_id"/>
+        <result column="familyname" property="familyname"></result>
+        <result column="phone" property="phone"></result>
+        <result column="identitycard" property="identitycard"></result>
+        <result column="address" property="address"></result>
+        <result column="status" property="status"></result>
+        <association property="old" javaType="RecOldLQ">
+            <id property="oldId" column="old_id"/>
+            <result column="old_name" property="oldName"></result>
+        </association>
+    </resultMap>
+
+
+    <!--//根据老人id来查询家属信息
+    List<RecFamilyLQ> selectfamliy(@Param("oldId")Integer oldId);-->
+    <select id="selectfamliy" resultMap="family">
+        select * from rec_family ro left join rec_old f on f.old_id=ro.old_id where ro.old_id=#{oldId}
+    </select>
+
+    <!--//根据家属id来查询信息
+    List<RecFamilyLQ> findfamily(@Param("familyId")Integer familyId);-->
+    <select id="findfamily" resultMap="family">
+        select * from rec_family  where family_id=#{familyId}
+    </select>
+
+</mapper>

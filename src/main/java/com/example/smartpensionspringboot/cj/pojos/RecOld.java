@@ -1,6 +1,10 @@
 package com.example.smartpensionspringboot.cj.pojos;
 
+import com.example.smartpensionspringboot.yxj.pojos.Deposite;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
+import java.util.List;
 
 public class RecOld {
 
@@ -10,7 +14,9 @@ public class RecOld {
   private String gender;
   private String phone;
   private String address;
+  @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
   private Date contractTime;
+  @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
   private Date joinTime;
   private String handle;
   private Long archives;
@@ -144,5 +150,16 @@ public class RecOld {
   public void setStatus(Long status) {
     this.status = status;
   }
+  //一个老人对应多个缴存
+  private List<Deposite> deposites;
+
+  public List<Deposite> getDeposites() {
+    return deposites;
+  }
+
+  public void setDeposites(List<Deposite> deposites) {
+    this.deposites = deposites;
+  }
+
 
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.fbm.dao.FbmFoodMapper">
+    <resultMap id="queryMapper" type="com.example.smartpensionspringboot.fbm.pojos.FbmFood">
+        <id column="fd_id" property="fdId"></id>
+        <result column="fd_degree" property="fdDegree"/>
+        <result column="fd_flavor" property="fdFlavor"/>
+        <result column="fd_name" property="fdName"/>
+        <result column="fd_inventory" property="fdInventory"/>
+        <result column="fd_padoo" property="fdPadoo"/>
+        <result column="fd_price" property="fdPrice"/>
+        <result column="fc_id" property="fcId"></result>
+        <result column="fd_ftatd" property="fdFtatd"/>
+        <association property="fbmFootCategory" javaType="com.example.smartpensionspringboot.fbm.pojos.FbmFootCategory">
+
+            <result column="fc_name" property="fcName"/>
+        </association>
+    </resultMap>
+    <select id="queryFbmFood" resultMap="queryMapper" parameterType="com.example.smartpensionspringboot.fbm.vo.ParamsVo">
+        select *from fbm_food e
+        left join fbm_foot_category d
+        on e.fc_id=d.fc_id
+        <where>
+            <if test="name != null and name != ''">
+                fd_name like concat('%', #{name}, '%')
+            </if>
+            <if test="id != null">
+                e.fc_id =#{id}
+            </if>
+        </where>
+        order by fd_id desc
+    </select>
+    <insert id="addFood" parameterType="com.example.smartpensionspringboot.fbm.pojos.FbmFood">
+        INSERT INTO fbm_food(fd_name,fc_id,fd_price,fd_ftatd,fd_degree,fd_flavor)
+        values
+        (#{fdName},#{fcId},#{fdPrice},#{fdFtatd},#{fdDegree},#{fdFlavor})
+    </insert>
+   <update id="updateFood" parameterType="com.example.smartpensionspringboot.fbm.pojos.FbmFood">
+        update fbm_food set
+       <if test="fdName!=null">
+           fd_name=#{fdName},
+       </if>
+       <if test="fcId!=null">
+           fc_id=#{fcId},
+       </if>
+       <if test="fdPrice!=null">
+           fd_price=#{fdPrice},
+       </if>
+       <if test="fdFtatd!=null">
+           fd_ftatd=#{fdFtatd},
+       </if>
+       <if test="fdDegree!=null">
+           fd_degree=#{fdDegree}
+       </if>
+       where fd_id=#{fdId}
+
+   </update>
+    <delete id="deleteFood" parameterType="int">
+        delete from fbm_food where fd_id=#{id}
+    </delete>
+
+</mapper>

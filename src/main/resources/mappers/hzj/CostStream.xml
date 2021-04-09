@@ -1,0 +1,23 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.CostStreamMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.pojos.CostStream">
+        <result property="id" column="id" />
+        <result property="oldId" column="old_id" />
+        <result property="categoryId" column="category_id"/>
+        <result property="money" column="money" />
+        <result property="tollman" column="tollman" />
+        <result property="maneyTime" column="maney_time"/>
+        <result property="maneyText" column="maney_text" />
+        <result property="remark" column="remark" />
+        <result property="insertTime" column="insert_time"/>
+        <result property="updateTime" column="update_time" />
+        <result property="deleteTime" column="delete_time" />
+    </resultMap>
+    <!--根据老人姓名查询-->
+    <select id="selectCostStream" resultMap="result">
+        select * from cost_stream where old_id=#{oldid}
+    </select>
+</mapper>

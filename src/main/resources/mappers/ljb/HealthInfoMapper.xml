@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.HealthInformationDao">
+    <resultMap id="healthMap" type="recHealthInformations">
+        <id column="hi_id" property="hiId"/>
+        <result column="old_id" property="oldId"/>
+        <result column="selfcare" property="selfcare"/>
+        <result column="vision" property="vision"/>
+        <result column="hearing" property="hearing"/>
+        <result column="doctor" property="doctor"/>
+        <result column="hospital" property="hospital"/>
+        <result column="doctor_phone" property="doctorPhone"/>
+        <result column="allergy" property="allergy"/>
+        <result column="medical_history" property="medicalHistory"/>
+        <result column="main_diseases" property="mainDiseases"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+    </resultMap>
+
+<!--    添加健康信息-->
+    <insert id="addHealthInfo" parameterType="recHealthInformation">
+        INSERT INTO rec_health_information (`old_id`,`selfcare`,`vision`,`hearing`,`doctor`,`hospital`,`doctor_phone`,
+                `allergy`,`medical_history`,`main_diseases`)
+            VALUES(#{oldId},#{selfcare},#{vision},#{hearing},#{doctor},#{hospital},#{doctorPhone},#{allergy},
+                #{medicalHistory},#{mainDiseases})
+    </insert>
+
+<!--   根据老人id 获取健康信息-->
+    <select id="getHealthByOldId" parameterType="recHealthInformation" resultMap="healthMap">
+        select * from rec_health_information where old_id = #{oldId}
+    </select>
+
+</mapper>

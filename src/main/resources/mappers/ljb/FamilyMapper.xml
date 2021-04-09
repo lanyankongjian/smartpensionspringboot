@@ -1,0 +1,30 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.FamilyDao">
+    <resultMap id="familyMap" type="recFamily">
+        <id column="family_id" property="familyId"/>
+        <result column="old_id" property="oldId"/>
+        <result column="familyname" property="familyname"/>
+        <result column="phone" property="phone"/>
+        <result column="identitycard" property="identitycard"/>
+        <result column="relationship" property="relationship"/>
+        <result column="gender" property="gender"/>
+        <result column="address" property="address"/>
+        <result column="guardian" property="guardian"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="getFamilyByOldId" resultMap="familyMap">
+        select * from rec_family where old_id = #{oldId}
+    </select>
+
+    <insert id="addFamily" parameterType="recFamily">
+        INSERT INTO `rec_family` (`old_id`,`familyname`,`phone`,`identitycard`,`relationship`,`gender`,
+            `address`,`guardian`,`ctime`,`status`)
+            VALUES(#{oldId},#{familyname},#{phone},#{identitycard},#{relationship},#{gender},#{address},
+                #{guardian},#{ctime},#{status})
+    </insert>
+</mapper>

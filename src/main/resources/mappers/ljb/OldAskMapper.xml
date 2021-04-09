@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.OldAskDao">
+<resultMap id="oldAskMap" type="recOldAsk">
+    <id column="oldask_id" property="oldaskId"/>
+    <result column="oldask_name" property="oldaskName"/>
+    <result column="ask_id" property="askId" />
+    <result column="identtitycard" property="identtitycard"/>
+    <result column="gender" property="gender" />
+    <result column="selfcare" property="selfcare"/>
+    <result column="address" property="address" />
+    <result column="status" property="status"/>
+    <result column="ctime" property="ctime" />
+    <result column="utime" property="utime"/>
+    <result column="dtime" property="dtime" />
+</resultMap>
+
+<!--    根据id 获取咨询的老人信息-->
+    <select id="getOldAsk" parameterType="long">
+        select * from rec_oldask where oldask_id = #{id}
+    </select>
+
+<!--    添加咨询老人信息-->
+    <insert id="addOldAsk" parameterType="recOldAsk">
+        INSERT INTO rec_oldask( `oldask_name`,`ask_id`,`identtitycard`,`gender`,`selfcare`,`address`,`status`,`ctime`)
+        VALUES(#{oldaskName},#{askId},#{identtitycard},#{gender},#{selfcare},#{address},#{status},#{ctime})
+    </insert>
+
+<!--    修改咨询老人信息-->
+    <update id="upOldAsk" parameterType="recOldAsk">
+        update rec_oldask
+        <set>
+            <if test="oldaskId != null">
+                `oldask_id` = #{oldaskId},
+            </if>
+            <if test="oldaskName != null">
+                `oldask_name` = #{oldaskName},
+            </if>
+            <if test="askId != null">
+                `ask_id` = #{askId},
+            </if>
+            <if test="identtitycard != null">
+                `identtitycard` = #{identtitycard},
+            </if>
+            <if test="gender != null">
+                `gender` = #{gender},
+            </if>
+            <if test="selfcare != null">
+                `selfcare` = #{selfcare},
+            </if>
+            <if test="address != null">
+                `address` = #{address},
+            </if>
+        </set>
+        WHERE `oldask_id` = #{oldaskId} ;
+
+    </update>
+</mapper>

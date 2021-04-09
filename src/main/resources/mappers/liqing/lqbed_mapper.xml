@@ -1,0 +1,20 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqbedMapper">
+    <resultMap id="bed" type="RecBedLQ">
+        <id property="bedId" column="bed_id"/>
+        <result column="bed" property="bed"></result>
+        <association property="old" javaType="RecOldLQ">
+            <id property="oldId" column="old_id"/>
+            <result column="old_name" property="oldName"></result>
+        </association>
+    </resultMap>
+
+    <!--//根据老人id获取床位号
+    List<RecBedLQ> findbed(@Param("oldId")Integer oldId);-->
+    <select id="findbed" resultMap="bed">
+        select * from rec_bed b left join rec_old ro on b.old_id = ro.old_id where b.old_id=#{oldId}
+    </select>
+
+
+</mapper>

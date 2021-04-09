@@ -1,0 +1,102 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace用来关联该XML文件所对应的Java接口类-->
+<mapper namespace="com.example.smartpensionspringboot.liqing.mapper.LqacrecordMapper">
+    <resultMap id="record" type="OldAccidentRecordLQ">
+        <id column="ar_id" property="arId"></id>
+        <result column="ar_time" property="arTime"></result>
+        <result column="ar_cause" property="arCause"></result>
+        <result column="ar_describe" property="arDescribe"></result>
+        <result column="ar_photo" property="arPhoto"></result>
+        <result column="ar_state" property="arState"></result>
+        <association property="user" javaType="UserLQ">
+            <id property="userId" column="user_id"/>
+            <result column="user_name" property="userName"></result>
+        </association>
+        <association property="nurse" javaType="NurseLQ">
+            <id property="nuId" column="nu_id"/>
+            <result column="nu_name" property="nuName"></result>
+            <result column="nu_phone" property="nuPhone"></result>
+        </association>
+        <association property="type" javaType="OldAccidentTypeLQ">
+            <id property="atId" column="at_id"/>
+            <result column="at_name" property="atName"/>
+            <result column="at_level" property="atLevel"/>
+            <result column="at_described" property="atDescribed"/>
+            <result column="at_deal" property="atDeal"/>
+            <result column="at_state" property="atState"/>
+        </association>
+        <association property="old" javaType="RecOldLQ">
+            <id property="oldId" column="old_id"/>
+            <result column="old_name" property="oldName"></result>
+        </association>
+        <association property="bed" javaType="RecBedLQ">
+            <id property="bedId" column="bed_id"/>
+            <result column="bed" property="bed"></result>
+            <association property="old" javaType="RecOldLQ">
+                <id property="oldId" column="old_id"/>
+                <result column="old_name" property="oldName"></result>
+            </association>
+        </association>
+    </resultMap>
+
+    <!-- //查询所有
+    List<OldAccidentRecordLQ> selectAllrecord();-->
+    <select id="selectAllrecord" resultMap="record">
+        select * from old_accident_record ar left join nurse n on ar.nu_id = n.nu_id left join rec_bed rb on ar.bed_id=rb.bed_id left join rec_old ro on ro.old_id=ar.old_id
+        left join old_accident_type oat on ar.at_id = oat.at_id left join user_ u on ar.user_id = u.user_id where ar.ar_state=0 order by ar.ar_time desc
+    </select>
+
+    <!--//新增
+    Integer insertrecord(@Param("r")OldAccidentRecordLQ r);-->
+    <insert id="insertrecord" parameterType="OldAccidentRecordLQ">
+        insert into old_accident_record value (null,#{r.old.oldId},#{r.bed.bedId},#{r.nurse.nuId},#{r.arTime},#{r.type.atId},#{r.user.userId},
+        #{r.arCause},#{r.arDescribe},#{r.arPhoto},0)
+    </insert>
+
+   <!-- //修改
+    Integer updaterecord(@Param("r")OldAccidentRecordLQ r);-->
+    <update id="updaterecord" parameterType="OldAccidentRecordLQ">
+        update old_accident_record set old_id=#{r.old.oldId},bed_id=#{r.bed.bedId},nu_id=#{r.nurse.nuId},at_id=#{r.type.atId},user_id=#{r.user.userId},
+        ar_cause=#{r.arCause},ar_describe=#{r.arDescribe},ar_photo=#{r.arPhoto},ar_state=#{r.arState} where ar_id=#{r.arId}
+    </update>
+
+    <!-- //高级查询
+    List<OldAccidentRecordLQ> adQueryrecord(@Param("oldName") String oldName,
+                                           @Param("bed") String bed, @Param("nuName") String nuName);-->
+    <select id="adQueryrecord" resultMap="record">
+         select * from old_accident_record ar left join nurse n on ar.nu_id = n.nu_id left join rec_bed rb on ar.bed_id=rb.bed_id left join rec_old ro on ro.old_id=ar.old_id
+        left join old_accident_type oat on ar.at_id = oat.at_id left join user_ u on ar.user_id = u.user_id
+        <where>
+            ar.ar_state=0
+            <if test="oldName!=null">
+                and ro.old_name like concat('%',#{oldName},'%')
+            </if>
+            <if test="bed!=null">
+                and rb.bed like concat('%',#{bed},'%')
+            </if>
+            <if test="nuName!=null">
+                and n.nu_name like concat('%',#{nuName},'%')
+            </if>
+            order by ar.ar_time desc
+        </where>
+    </select>
+
+    <!-- //批量逻辑删除服务
+    Integer logicDeleterecirds(List<Integer> params);-->
+    <update id="logicDeleterecirds" parameterType="java.util.ArrayList">
+        update old_accident_record set ar_state=1 where ar_id in
+        <foreach collection="list" item="sid" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </update>
+
+    <!--//历史删除
+    List<OldAccidentRecordLQ> history();-->
+    <select id="history" resultMap="record">
+        select * from old_accident_record ar left join nurse n on ar.nu_id = n.nu_id left join rec_bed rb on ar.bed_id=rb.bed_id left join rec_old ro on ro.old_id=ar.old_id
+        left join old_accident_type oat on ar.at_id = oat.at_id left join user_ u on ar.user_id = u.user_id where ar.ar_state=1 order by ar.ar_time desc
+    </select>
+
+
+
+</mapper>

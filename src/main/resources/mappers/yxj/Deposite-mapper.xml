@@ -1,0 +1,68 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.yxj.mapper.DepositeMapper">
+    <!--  查询三表  -->
+    <select id="depositeList" resultType="java.util.Map">
+        select * from deposite dep left join drug dr on dep.drug_id=dr.drug_id left join rec_old reco on dep.old_id=reco.old_id left join category cate on dr.category_id=cate.category_id
+        <where>
+            <if test="depositeMode !=null and depositeMode!='' ">
+                dep.deposite_mode like '%${depositeMode}%'
+            </if>
+        </where>
+        order by deposite_id desc
+    </select>
+
+    <!--  查询老人表  -->
+    <resultMap id="recOld" type="com.example.smartpensionspringboot.cj.pojos.RecOld">
+        <id column="old_id" property="oldId"></id>
+        <result column="old_name" property="oldName"></result>
+    </resultMap>
+    <select id="oldList" resultMap="recOld">
+        select * from rec_old
+    </select>
+
+    <!--  查询类别表  -->
+    <resultMap id="categorys" type="com.example.smartpensionspringboot.yxj.pojos.Categorys">
+        <id column="category_id" property="categoryId"></id>
+        <result column="category_name" property="categoryName"></result>
+    </resultMap>
+    <select id="categoryList" resultMap="categorys">
+        select * from category
+    </select>
+
+
+    <!-- 查询药品表   -->
+    <resultMap id="drug" type="com.example.smartpensionspringboot.yxj.pojos.Drug">
+        <id column="drug_id" property="drugId"></id>
+        <result column="drug_code" property="drugCode"></result>
+        <result column="drug_name" property="drugName"></result>
+        <result column="drug_size" property="drugSize"></result>
+        <result column="drug_type" property="drugType"></result>
+        <result column="drug_vender" property="drugVender"></result>
+
+        <collection property="categories" javaType="com.example.smartpensionspringboot.yxj.pojos.Categorys">
+            <id column="category_id" property="categoryId"></id>
+            <result column="category_name" property="categoryName"></result>
+        </collection>
+    </resultMap>
+    <select id="drcList" resultMap="drug">
+        select * from drug d left join category cy on d.category_id = cy.category_id
+        where cy.category_id = #{categoryId}
+    </select>
+
+    
+    <insert id="savedeposite">
+        INSERT into deposite(deposite_id,deposite_mode,deposite_num,deposite_zt,deposite_time,old_id,drug_id)
+	    VALUES(#{depositeId},#{depositeMode},#{depositeNum},#{depositeZt},#{depositeTime},#{recOld.oldId},#{drugId})
+    </insert>
+
+    <update id="updatedeposite">
+        update deposite set
+        deposite_zt = 0 where deposite_id=#{Id}
+    </update>
+    
+    
+
+
+
+</mapper>
+

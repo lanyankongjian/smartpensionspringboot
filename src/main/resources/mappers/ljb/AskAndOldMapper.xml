@@ -1,0 +1,95 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.AskAndOldaskDao">
+    <resultMap id="askAndOldmap" type="askAndOld">
+        <id column="oldask_id" property="oldaskId"/>
+        <result column="ask_id" property="askId"/>
+        <result column="oldask_name" property="oldaskName"/>
+        <result column="identtitycard" property="identtitycard"/>
+        <result column="gender" property="gender"/>
+        <result column="selfcare" property="selfcare"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+        <collection property="recAsks" ofType="recAsk" >
+            <id column="ask_id" property="askId"/>
+            <result column="ask_name" property="askName"/>
+            <result column="relationship" property="relationship"/>
+            <result column="ask_date" property="askDate"/>
+            <result column="phone" property="phone"/>
+            <result column="ask_way" property="askWay"/>
+            <result column="ask_type" property="askType"/>
+            <result column="receiver" property="receiver"/>
+            <result column="ask_centent" property="askCentent"/>
+            <result column="ctime" property="ctime"/>
+            <result column="utime" property="utime"/>
+            <result column="dtime" property="dtime"/>
+        </collection>
+    </resultMap>
+
+    <sql id="allpro">
+        o.`oldask_id`,
+        o.`oldask_name`,
+        o.`ask_id`,
+        o.`identtitycard`,
+        o.`gender`,
+        o.`selfcare`,
+        o.`address`,
+        o.`status`,
+        o.`ctime`,
+        o.`utime`,
+        o.`dtime`,
+        a.`ask_id`,
+        a.`ask_name`,
+        a.`relationship`,
+        a.`ask_date`,
+        a.`phone`,
+        a.`ask_way`,
+        a.`ask_type`,
+        a.`receiver`,
+        a.`ask_centent`,
+        a.`ctime`,
+        a.`utime`,
+        a.`dtime`
+    </sql>
+
+
+    <select id="getAskAndOld" resultMap="askAndOldmap">
+        SELECT  oldask_id,ask_name,relationship,ask_date,phone ,ask_way,ask_type ,
+            receiver,ask_centent ,oldask_name ,identtitycard ,
+            gender,selfcare ,address ,status,a.ask_id
+        FROM rec_ask a
+        LEFT JOIN rec_oldask o ON a.ask_id = o.ask_id
+        order by o.ask_id desc
+    </select>
+
+    <select id="conditionalQuery" resultMap="askAndOldmap" parameterType="AskAndOld">
+        SELECT  oldask_id,ask_name,relationship,ask_date,phone ,ask_way,ask_type,
+            receiver,ask_centent ,oldask_name ,identtitycard ,
+            gender,selfcare ,address ,status,a.ask_id
+        FROM rec_ask a
+        LEFT JOIN rec_oldask o ON a.ask_id = o.ask_id
+        <where>
+            <if test="recAsks[0].askName != null">
+                and a.ask_name LIKE concat('%',#{recAsks[0].askName},'%')
+            </if>
+            <if test="oldaskName != null">
+                AND oldask_name LIKE concat('%',#{oldaskName},'%')
+            </if>
+            <if test="recAsks[0].receiver != null">
+                AND receiver LIKE CONCAT('%',#{recAsks[0].receiver}'%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        order by o.ask_id desc
+    </select>
+
+
+
+
+</mapper>

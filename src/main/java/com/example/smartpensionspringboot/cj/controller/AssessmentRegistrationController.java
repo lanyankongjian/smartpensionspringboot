@@ -23,7 +23,7 @@ public class AssessmentRegistrationController {
         return assessmentRegistrationService.selectName();
     }
     @PostMapping("/insert")
-    public void insert(@RequestBody AssessmentRegistration assessmentRegistration){
+    public void insert(@RequestBody AssessmentRegistration assessmentRegistration) {
         assessmentRegistrationService.insert(assessmentRegistration);
     }
     @PostMapping("/delete")

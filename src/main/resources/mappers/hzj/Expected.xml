@@ -1,0 +1,43 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.ExpectedRegMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.pojos.ExpectedRegistrations">
+        <result property="regId" column="user_id" />
+        <result property="oldName" column="user_name" />
+        <result property="updateTime" column="user_pass"/>
+        <result property="phyTime" column="user_id" />
+        <result property="regTime" column="user_name" />
+        <result property="registrant" column="user_pass"/>
+        <result property="registrantId" column="user_id" />
+        <result property="phyHospital" column="user_name" />
+        <result property="phyExamination" column="user_pass"/>
+
+        <result property="phyPicture" column="user_id" />
+        <result property="height" column="height" />
+        <result property="weight" column="weight"/>
+        <result property="temperature" column="temperature" />
+        <result property="highPressure" column="highPressure" />
+        <result property="lowPressure" column="lowPressure"/>
+        <result property="pulse" column="pulse" />
+        <result property="bloodOxygen" column="bloodOxygen" />
+        <result property="fastingBlood" column="fastingBlood"/>
+
+        <result property="postprandialBlood" column="postprandialBlood" />
+        <result property="totalCholesterol" column="totalCholesterol"/>
+        <result property="hdl" column="hdl" />
+        <result property="triglyceride" column="triglyceride" />
+        <result property="ldl" column="ldl"/>
+        <result property="uricAcid" column="uricAcid"/>
+        <result property="qrsInterval" column="qrsInterval" />
+        <result property="rrInterval" column="rrInterval" />
+        <result property="gpComments" column="gpComments"/>
+        <result property="tdaResults" column="tdaResults"/>
+        <result property="heartRate" column="heartRate" />
+    </resultMap>
+
+    <select id="selectExpctedReg" resultMap="result">
+      select * from expected_registration where old_name=#{oldid}
+   </select>
+</mapper>

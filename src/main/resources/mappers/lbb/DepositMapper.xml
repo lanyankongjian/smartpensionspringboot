@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.DepositDao">
+    <resultMap id="DepositMap" type="com.example.smartpensionspringboot.lbb.pojos.Deposit">
+        <id column="id" property="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="margin" column="margin"/>
+        <result property="deposit_name" column="deposit_name"/>
+        <result property="get_time" column="get_time"/>
+        <result property="return_time" column="return_time"/>
+        <result property="state" column="state"/>
+        <result property="insert_time" column="insert_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="delete_time" column="delete_time"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="gender" column="gender"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+    <!--获取所有押金-->
+    <select id="getAllDeposit" resultMap="DepositMap">
+        SELECT ro.old_name,ro.identitycard,cd.margin,cd.state,cd.get_time,cd.return_time,cd.id
+        FROM cost_deposit cd
+        LEFT JOIN rec_old ro ON ro.old_id = cd.old_id order by cd.id desc
+    </select>
+    <!--根据编号获取押金-->
+    <select id="getDepositById" resultMap="DepositMap">
+        SELECT ro.old_name,ro.identitycard,cd.margin,cd.state,cd.get_time,cd.return_time,cd.deposit_name
+        FROM cost_deposit cd
+        LEFT JOIN rec_old ro ON ro.old_id = cd.old_id
+        where cd.id = #{id}
+    </select>
+    <!--搜索押金-->
+    <select id="getDepositBySearch" resultMap="DepositMap" parameterType="com.example.smartpensionspringboot.lbb.vo.DepositVo">
+        SELECT ro.old_name,ro.identitycard,cd.margin,cd.state,cd.get_time,cd.return_time,cd.id
+        FROM cost_deposit cd
+        LEFT JOIN rec_old ro ON ro.old_id = cd.old_id
+        <where>
+            <if test="old_name != null and old_name != ''">
+                and ro.old_name LIKE CONCAT('%',#{old_name},'%')
+            </if>
+            <if test="identitycard != null and identitycard != ''">
+                and ro.identitycard LIKE CONCAT('%',#{identitycard},'%')
+            </if>
+        </where>
+        order by cd.id desc
+    </select>
+</mapper>

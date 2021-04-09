@@ -22,7 +22,7 @@ public class AssessmentRegistrationService {
     }
     @Transactional(rollbackFor = Exception.class)
     //如果想保证非RuntimeException错误的回滚，需要加上rollbackFor = Exception.class 参数
-    public void insert(AssessmentRegistration assessmentRegistration){
+    public void insert(AssessmentRegistration assessmentRegistration) {
         assessmentRegistration.setUpdateTime(new Date());
         assessmentRegistrationMapper.insert(assessmentRegistration);
     }

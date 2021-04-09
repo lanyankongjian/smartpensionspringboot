@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.lbb.dao.ArrearDao">
+    <resultMap id="ArrMap" type="com.example.smartpensionspringboot.lbb.pojos.Arrear">
+        <id property="id" column="id"/>
+        <result property="old_id" column="old_id"/>
+        <result property="prestore_id" column="prestore_id"/>
+        <result property="strea_id" column="strea_id"/>
+        <result property="amount" column="amount"/>
+        <result property="state" column="state"/>
+        <association property="old" javaType="com.example.smartpensionspringboot.lbb.pojos.Old">
+            <id property="oldId" column="old_id"/>
+            <result property="oldName" column="old_name"/>
+            <result property="identitycard" column="identitycard"/>
+            <result property="phone" column="phone"/>
+            <result property="joinTime" column="join_time"/>
+        </association>
+        <association property="prestore" javaType="com.example.smartpensionspringboot.lbb.pojos.Prestore">
+            <id column="id" property="id"/>
+            <result property="old_id" column="old_id"/>
+            <result property="detail_id" column="detail_id"/>
+            <result property="amount" column="amount"/>
+            <result property="remark" column="remark"/>
+        </association>
+        <association property="bed" javaType="com.example.smartpensionspringboot.lbb.pojos.Bed">
+            <id property="bedId" column="bed_id"/>
+            <result property="bedType" column="bedType"/>
+            <result property="isroom" column="isroom"/>
+            <result property="cost" column="cost"/>
+            <result property="bed" column="bed"/>
+            <result property="remarks" column="remarks"/>
+        </association>
+        <association property="stream" javaType="com.example.smartpensionspringboot.lbb.pojos.Stream">
+            <id column="id" property="id"/>
+            <result property="old_id" column="old_id"/>
+            <result property="money" column="money"/>
+        </association>
+    </resultMap>
+    <select id="getAllArrear" resultMap="ArrMap">
+        SELECT ro.old_name,ro.identitycard,ca.amount,ca.state,cds.amount,ro.join_time,rb.bed
+        FROM cost_arrears ca
+        LEFT JOIN rec_old ro ON ca.old_id = ro.old_id
+        LEFT JOIN cost_prestore cp ON ca.prestore_id = cp.id
+        LEFT JOIN cost_detail_storage cds ON cp.detail_id = cds.id
+        LEFT JOIN cost_stream cs ON ca.strea_id = cs.id
+        LEFT JOIN rec_bed rb ON ro.old_id = rb.old_id
+    </select>
+</mapper>

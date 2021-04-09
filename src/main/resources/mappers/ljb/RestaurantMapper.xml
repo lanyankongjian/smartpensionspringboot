@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.ljb.dao.RestaurantDao">
+    <resultMap id="resMap" type="recRestaurant">
+        <id column="res_id" property="resId"/>
+        <result column="old_id" property="oldId"/>
+        <result column="dd_id" property="ddId"/>
+        <result column="package_fee" property="packageFee"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <result column="dtime" property="dtime"/>
+    </resultMap>
+
+    <insert id="addRes" parameterType="recRestaurant" useGeneratedKeys="true" keyProperty="resId">
+        INSERT INTO `rec_restaurant` (`old_id`, `dd_id`, `package_fee`, `ctime`)
+        VALUES ( #{oldId}, #{ddId}, #{packageFee}, #{ctime})
+    </insert>
+    <select id="getResByOldId" resultMap="resMap">
+        select * from rec_restaurant where old_id = #{oldId}
+    </select>
+</mapper>

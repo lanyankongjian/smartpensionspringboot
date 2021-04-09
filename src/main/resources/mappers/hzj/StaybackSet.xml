@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartpensionspringboot.hzj.mapper.StaybackSetMapper">
+    <resultMap id="result" type="com.example.smartpensionspringboot.hzj.pojos.StaybackSet">
+        <result property="ssId" column="ssId" />
+        <result property="oldId" column="oldId" />
+        <result property="oldName" column="oldName"/>
+        <result property="identitycard" column="identitycard" />
+        <result property="address" column="address" />
+        <result property="money" column="money"/>
+        <result property="joinTime" column="joinTime" />
+        <result property="endtime" column="endtime" />
+        <result property="status" column="status" />
+    </resultMap>
+    <insert id="insertStaybackSet" parameterType="com.example.smartpensionspringboot.hzj.pojos.StaybackSet">
+        INSERT INTO stayback_set
+         (oldId,oldName,identitycard,address,money,joinTime,endtime,status)
+        VALUES
+         (#{oldId},#{oldName},#{identitycard},#{address},#{money},#{joinTime},#{endtime},#{status})
+    </insert>
+
+    <select id="selectStaybackSet" resultMap="result"
+            resultType="com.example.smartpensionspringboot.hzj.pojos.StaybackSet">
+        SELECT * FROM stayback_set
+    </select>
+
+    <select id="selectStaybackName" resultMap="result" >
+        SELECT * FROM stayback_set where oldName=#{setname}
+    </select>
+
+    <update id="updetaStaybackSet" parameterType="com.example.smartpensionspringboot.hzj.pojos.StaybackSet">
+        UPDATE stayback_set set status =3 where oldName=#{oldName}
+    </update>
+
+</mapper>
